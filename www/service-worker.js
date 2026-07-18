@@ -19,7 +19,7 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   // Skip APK downloads - don't intercept them with the service worker
-  if (event.request.url.endsWith('.apk')) {
+  if (new URL(event.request.url).pathname.endsWith('.apk')) {
     return;
   }
 
