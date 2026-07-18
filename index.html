@@ -155,63 +155,10 @@
   .li-amount{ font-family:'JetBrains Mono',monospace; font-size:14px; font-weight:500; flex-shrink:0; }
   .li-del{ color:var(--text-faint); background:none; border:none; font-size:18px; cursor:pointer; padding:4px 2px; flex-shrink:0; line-height:1; }
 
-  .semaforo{
-    display:flex; gap:8px; margin-bottom:16px;
-  }
-  .sf-light{ flex:1; text-align:center; padding:10px 4px; border-radius:10px; font-size:11px; opacity:0.28; border:1px solid var(--line); }
-  .sf-light.on{ opacity:1; }
-  .sf-red.on{ background:rgba(255,100,89,0.14); border-color:var(--red); color:var(--red); }
-  .sf-amber.on{ background:var(--amber-dim); border-color:var(--amber); color:var(--amber); }
-  .sf-green.on{ background:rgba(127,216,88,0.14); border-color:var(--green-pos); color:var(--green-pos); }
-
-  .verdict{
-    text-align:center; padding:16px; border-radius:14px; font-size:15px; font-weight:700; margin-bottom:14px;
-  }
-
   .threshold-row{ display:flex; align-items:center; gap:10px; background:var(--bg-card); border:1px solid var(--line); border-radius:14px; padding:12px 16px; }
   .threshold-row label{ font-size:12px; color:var(--text-dim); flex:1; }
   .threshold-row input{ width:70px; background:var(--bg-card-2); border:1px solid var(--line); color:var(--text); padding:8px; border-radius:8px; font-family:'JetBrains Mono',monospace; text-align:center; }
   .threshold-row + .threshold-row{ margin-top:10px; }
-  textarea.mono-input{
-    min-height: 80px; resize: vertical;
-    font-family: 'JetBrains Mono', monospace;
-  }
-
-  /* fab */
-  .fab{
-    position:fixed; right:16px; bottom:92px; z-index:40;
-    background:var(--amber); color:#1a1400; border:none; border-radius:50px;
-    padding:13px 18px 13px 15px; font-size:14px; font-weight:700;
-    display:flex; align-items:center; gap:7px; cursor:pointer;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.35);
-    max-width:480px;
-  }
-  .fab svg{ width:18px; height:18px; }
-
-  /* quick calc modal */
-  .modal-overlay{
-    display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55);
-    z-index:60; align-items:flex-end; justify-content:center;
-  }
-  .modal-overlay.show{ display:flex; }
-  .modal-sheet{
-    background:var(--bg-card); border-top:1px solid var(--line);
-    border-radius:20px 20px 0 0; padding:20px 18px calc(20px + env(safe-area-inset-bottom));
-    width:100%; max-width:480px; max-height:88vh; overflow-y:auto;
-  }
-  .modal-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
-  .modal-title{ font-size:16px; font-weight:700; }
-  .modal-close{ background:none; border:none; color:var(--text-dim); font-size:22px; cursor:pointer; line-height:1; padding:2px 6px; }
-  .mode-toggle{ display:flex; gap:8px; margin-bottom:16px; }
-  .mode-btn{ flex:1; text-align:center; padding:9px 0; border-radius:9px; font-size:12.5px; color:var(--text-dim); background:var(--bg-card-2); border:1px solid var(--line); cursor:pointer; }
-  .mode-btn.active{ background:var(--amber-dim); color:var(--amber); border-color:var(--amber); }
-  .quick-result{
-    text-align:center; padding:22px 10px; border-radius:14px; margin: 16px 0;
-    background:var(--bg-card-2); border:1px solid var(--line);
-  }
-  .quick-result-value{ font-size:32px; font-weight:700; font-family:'JetBrains Mono',monospace; }
-  .quick-result-label{ font-size:12px; color:var(--text-dim); margin-top:4px; }
-  .quick-platform-select{ display:flex; gap:8px; margin-bottom:14px; }
 
   /* bottom nav */
   .tabbar{
@@ -355,76 +302,6 @@
     <button class="btn-primary" id="save-settings" style="margin-top:12px;">Guardar precios</button>
   </div>
 
-</div>
-
-<button class="fab" id="fab-quick">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>
-  Calcular oferta
-</button>
-
-<div class="modal-overlay" id="quick-modal">
-  <div class="modal-sheet">
-    <div class="modal-head">
-      <div class="modal-title">¿Te conviene esta oferta?</div>
-      <button class="modal-close" id="quick-close" aria-label="Cerrar">×</button>
-    </div>
-
-    <div class="quick-platform-select" id="quick-platform-select">
-      <div class="platform-opt" data-qplatform="uber" style="--sel-color:#e8e8e8">Uber</div>
-      <div class="platform-opt" data-qplatform="didi" style="--sel-color:#ff7a33">Didi</div>
-      <div class="platform-opt" data-qplatform="indrive" style="--sel-color:#a4d84a">InDrive</div>
-    </div>
-
-    <div class="field">
-      <label>Monto que ofrece la app ($)</label>
-      <input type="number" inputmode="decimal" class="mono-input" id="quick-amount" placeholder="4500">
-    </div>
-    <div class="row-2">
-      <div class="field">
-        <label>Minutos recogida</label>
-        <input type="number" inputmode="decimal" class="mono-input" id="quick-pickup-min" placeholder="5">
-      </div>
-      <div class="field">
-        <label>Minutos viaje</label>
-        <input type="number" inputmode="decimal" class="mono-input" id="quick-trip-min" placeholder="18">
-      </div>
-    </div>
-    <div class="row-2">
-      <div class="field">
-        <label>Km recogida</label>
-        <input type="number" inputmode="decimal" class="mono-input" id="quick-pickup-km" placeholder="1.2">
-      </div>
-      <div class="field">
-        <label>Km viaje</label>
-        <input type="number" inputmode="decimal" class="mono-input" id="quick-trip-km" placeholder="8.5">
-      </div>
-    </div>
-
-    <div class="field">
-      <label>Texto del aviso (copiado desde Uber / Didi / InDrive)</label>
-      <textarea class="mono-input" id="quick-text" rows="3" placeholder="Ej: Didi · $4.500 · 5 min recogida · 18 min viaje · 1.2 km recogida · 8.5 km viaje"></textarea>
-    </div>
-    <div class="row-2">
-      <button class="btn-secondary" id="quick-paste">Pegar texto</button>
-      <button class="btn-secondary" id="quick-parse">Calcular con texto</button>
-    </div>
-
-    <div class="quick-result" id="quick-result">
-      <div class="quick-result-value" id="quick-result-value">—</div>
-      <div class="quick-result-label" id="quick-result-label">Completá los datos</div>
-    </div>
-
-    <div class="quick-summary" id="quick-summary">Oferta de una plataforma: completá monto, minutos y kilómetros para revisar si entra en tus requisitos.</div>
-    <div class="quick-requirement" id="quick-requirement">Sin evaluación todavía</div>
-
-    <div class="semaforo" id="quick-semaforo">
-      <div class="sf-light sf-red" id="qsf-red">Bajo tu mínimo</div>
-      <div class="sf-light sf-amber" id="qsf-amber">Cerca del mínimo</div>
-      <div class="sf-light sf-green" id="qsf-green">Buen viaje</div>
-    </div>
-
-    <button class="btn-primary" id="quick-save" style="margin-top:6px;">Guardar como viaje</button>
-  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -702,138 +579,6 @@
     });
   });
 
-
-  /* ---------- ventanita emergente de cálculo rápido ---------- */
-  let quickPlatform = null;
-
-  function numFromInput(id){
-    const value = parseFloat($(id).value);
-    return Number.isFinite(value) && value > 0 ? value : 0;
-  }
-
-  function getQuickOfferMetrics(){
-    const amount = numFromInput('quick-amount');
-    const pickupMin = numFromInput('quick-pickup-min');
-    const tripMin = numFromInput('quick-trip-min');
-    const pickupKm = numFromInput('quick-pickup-km');
-    const tripKm = numFromInput('quick-trip-km');
-    const totalMin = pickupMin + tripMin;
-    const totalKm = pickupKm + tripKm;
-
-    return {
-      amount,
-      pickupMin,
-      tripMin,
-      pickupKm,
-      tripKm,
-      totalMin,
-      totalKm,
-      perKm: amount > 0 && totalKm > 0 ? amount / totalKm : null,
-      perHour: amount > 0 && totalMin > 0 ? (amount / totalMin) * 60 : null,
-    };
-  }
-
-  function prefillQuickModalFromLatestTrip(){
-    const latest = [...trips].sort((a,b) => b.ts - a.ts)[0];
-    if(!latest) return;
-
-    quickPlatform = latest.platform;
-    document.querySelectorAll('[data-qplatform]').forEach(opt => {
-      opt.classList.toggle('selected', opt.dataset.qplatform === quickPlatform);
-    });
-
-    $('quick-amount').value = latest.amount || '';
-    $('quick-trip-km').value = latest.km || '';
-  }
-
-  function openQuickModal(){
-    prefillQuickModalFromLatestTrip();
-    $('quick-modal').classList.add('show');
-    updateQuickResult();
-  }
-  function closeQuickModal(){
-    $('quick-modal').classList.remove('show');
-  }
-  $('fab-quick').addEventListener('click', openQuickModal);
-  $('quick-close').addEventListener('click', closeQuickModal);
-  $('quick-modal').addEventListener('click', (ev) => {
-    if(ev.target.id === 'quick-modal') closeQuickModal();
-  });
-
-  document.querySelectorAll('[data-qplatform]').forEach(opt => {
-    opt.addEventListener('click', () => {
-      document.querySelectorAll('[data-qplatform]').forEach(o => o.classList.remove('selected'));
-      opt.classList.add('selected');
-      quickPlatform = opt.dataset.qplatform;
-      updateQuickResult();
-    });
-  });
-
-  function setQuickSemaforo(value, min){
-    ['qsf-red','qsf-amber','qsf-green'].forEach(id => $(id).classList.remove('on'));
-    if(value === null) return;
-    if(value < min * 0.85) $('qsf-red').classList.add('on');
-    else if(value < min * 1.1) $('qsf-amber').classList.add('on');
-    else $('qsf-green').classList.add('on');
-  }
-
-  function parseQuickText(sourceText){
-    const text = (sourceText || '').toLowerCase();
-    const amountMatch = text.match(/(?:\$|\$\s*|ars|pesos?)\s*([0-9]+(?:[.,][0-9]{1,2})?)/i);
-    const pickupMinMatch = text.match(/([0-9]+(?:[.,][0-9]{1,2})?)\s*(min|mins|minutos)\s*(de\s*)?(recogida|retiro|pickup)/i);
-    const tripMinMatch = text.match(/([0-9]+(?:[.,][0-9]{1,2})?)\s*(min|mins|minutos)\s*(de\s*)?(viaje|trayecto|destino)/i);
-    const pickupKmMatch = text.match(/([0-9]+(?:[.,][0-9]{1,2})?)\s*(km|kilometros|kilómetros)\s*(de\s*)?(recogida|retiro|pickup)/i);
-    const tripKmMatch = text.match(/([0-9]+(?:[.,][0-9]{1,2})?)\s*(km|kilometros|kilómetros)\s*(de\s*)?(viaje|trayecto|destino)/i);
-    const minMatches = [...text.matchAll(/([0-9]+(?:[.,][0-9]{1,2})?)\s*(min|mins|minutos)/gi)];
-    const kmMatches = [...text.matchAll(/([0-9]+(?:[.,][0-9]{1,2})?)\s*(km|kilometros|kilómetros)/gi)];
-    const platformMap = {
-      uber: /uber/,
-      didi: /didi/,
-      indrive: /indrive|in\s*drive/
-    };
-
-    const detectedPlatform = Object.entries(platformMap).find(([, regex]) => regex.test(text));
-    if(detectedPlatform){
-      quickPlatform = detectedPlatform[0];
-      document.querySelectorAll('[data-qplatform]').forEach(opt => {
-        opt.classList.toggle('selected', opt.dataset.qplatform === quickPlatform);
-      });
-    }
-
-    if(amountMatch) $('quick-amount').value = amountMatch[1].replace(',', '.');
-    if(pickupMinMatch) $('quick-pickup-min').value = pickupMinMatch[1].replace(',', '.');
-    else if(minMatches[0]) $('quick-pickup-min').value = minMatches[0][1].replace(',', '.');
-    if(tripMinMatch) $('quick-trip-min').value = tripMinMatch[1].replace(',', '.');
-    else if(minMatches[1]) $('quick-trip-min').value = minMatches[1][1].replace(',', '.');
-    if(pickupKmMatch) $('quick-pickup-km').value = pickupKmMatch[1].replace(',', '.');
-    else if(kmMatches[0]) $('quick-pickup-km').value = kmMatches[0][1].replace(',', '.');
-    if(tripKmMatch) $('quick-trip-km').value = tripKmMatch[1].replace(',', '.');
-    else if(kmMatches[1]) $('quick-trip-km').value = kmMatches[1][1].replace(',', '.');
-  }
-
-  function updateQuickResult(){
-    const metrics = getQuickOfferMetrics();
-    const hasResult = metrics.perKm !== null && metrics.perHour !== null;
-
-    $('quick-result-value').textContent = hasResult
-      ? '$' + Math.round(metrics.perKm).toLocaleString('es-CL') + '/km'
-      : '—';
-    $('quick-result-label').textContent = hasResult
-      ? `${Math.round(metrics.perHour).toLocaleString('es-CL')} $/hora · ${metrics.totalMin} min total`
-      : 'Completá monto, minutos y km';
-    $('quick-summary').textContent = hasResult
-      ? `Tiempo total: ${metrics.totalMin} min. Km total: ${metrics.totalKm.toFixed(1)} km. Recogida: ${metrics.pickupMin} min / ${metrics.pickupKm.toFixed(1)} km. Viaje: ${metrics.tripMin} min / ${metrics.tripKm.toFixed(1)} km.`
-      : 'Oferta de una plataforma: completá monto, minutos y kilómetros para revisar si entra en tus requisitos.';
-    $('quick-requirement').textContent = hasResult
-      ? `Monto ofrecido dividido por km total: ${Math.round(metrics.perKm).toLocaleString('es-CL')} $/km.`
-      : 'Sin evaluación todavía';
-    setQuickSemaforo(metrics.perKm, settings.minPerKm || 1);
-  }
-
-  ['quick-amount','quick-pickup-min','quick-trip-min','quick-pickup-km','quick-trip-km'].forEach(id => {
-    $(id).addEventListener('input', updateQuickResult);
-  });
-
   $('save-settings').addEventListener('click', async () => {
     const minPerKm = parseInt($('setting-min-km').value, 10);
     const minPerHour = parseInt($('setting-min-hour').value, 10);
@@ -844,42 +589,7 @@
     settings.minPerKm = minPerKm;
     settings.minPerHour = minPerHour;
     await saveSettings();
-    updateQuickResult();
     showToast('Precios guardados');
-  });
-
-  $('quick-parse').addEventListener('click', () => {
-    parseQuickText($('quick-text').value);
-    updateQuickResult();
-  });
-
-  $('quick-paste').addEventListener('click', async () => {
-    try {
-      const text = await navigator.clipboard.readText();
-      $('quick-text').value = text;
-      parseQuickText(text);
-      updateQuickResult();
-      showToast('Texto pegado desde el portapapeles');
-    } catch (err) {
-      showToast('No se pudo leer el portapapeles');
-    }
-  });
-
-  $('quick-save').addEventListener('click', async () => {
-    const amount = parseFloat($('quick-amount').value);
-    if(!quickPlatform){ showToast('Elegí una plataforma'); return; }
-    if(!amount || amount <= 0){ showToast('Ingresá un monto válido'); return; }
-    const metrics = getQuickOfferMetrics();
-    const km = metrics.totalKm || null;
-    trips.push({ id: 't'+Date.now(), platform: quickPlatform, amount, km, ts: Date.now() });
-    await saveTrips();
-    showToast('Viaje guardado');
-    ['quick-amount','quick-pickup-min','quick-trip-min','quick-pickup-km','quick-trip-km'].forEach(id => { $(id).value=''; });
-    document.querySelectorAll('[data-qplatform]').forEach(o => o.classList.remove('selected'));
-    quickPlatform = null;
-    updateQuickResult();
-    closeQuickModal();
-    render();
   });
 
   $('install-apk').addEventListener('click', async (event) => {
