@@ -188,18 +188,6 @@
   }
   .fab svg{ width:18px; height:18px; }
 
-  .floating-result{
-    position:fixed; right:16px; bottom:18px; z-index:50;
-    width:min(200px, calc(100vw - 32px));
-    background:rgba(28,31,38,0.95); border:1px solid rgba(255,255,255,0.08);
-    border-radius:18px; padding:10px 12px;
-    box-shadow:0 10px 24px rgba(0,0,0,0.35);
-    backdrop-filter: blur(10px);
-  }
-  .floating-title{ font-size:10px; color:var(--text-dim); margin-bottom:4px; text-transform:uppercase; letter-spacing:0.08em; }
-  .floating-value{ font-size:20px; font-weight:700; font-family:'JetBrains Mono',monospace; line-height:1.1; }
-  .floating-note{ font-size:10.5px; color:var(--text-dim); margin-top:3px; line-height:1.25; }
-
   /* quick calc modal */
   .modal-overlay{
     display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55);
@@ -373,12 +361,6 @@
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>
   Calcular oferta
 </button>
-
-<div class="floating-result" id="floating-result">
-  <div class="floating-title">Resultado rápido</div>
-  <div class="floating-value" id="floating-value">—</div>
-  <div class="floating-note" id="floating-note">Pega el aviso o llena los datos</div>
-</div>
 
 <div class="modal-overlay" id="quick-modal">
   <div class="modal-sheet">
@@ -677,7 +659,7 @@
     document.querySelectorAll('.platform-opt').forEach(o => o.classList.remove('selected'));
     selectedPlatform = null;
     if(!isNaN(km) && km > 0){
-      showToast(`Viaje guardado \u2014 ${Math.round(amount/km).toLocaleString('es-CL')} $/km`);
+      showToast(`Viaje guardado — ${Math.round(amount/km).toLocaleString('es-CL')} $/km`);
     } else {
       showToast('Viaje guardado');
     }
@@ -720,7 +702,7 @@
   });
 
 
-  /* ---------- ventanita emergente de c\u00e1lculo r\u00e1pido ---------- */
+  /* ---------- ventanita emergente de cálculo rápido ---------- */
   let quickPlatform = null;
 
   function numFromInput(id){
@@ -794,16 +776,6 @@
     else $('qsf-green').classList.add('on');
   }
 
-  function syncFloatingResult(metrics){
-    if(!metrics.perKm){
-      $('floating-value').textContent = '—';
-      $('floating-note').textContent = 'Pega el aviso o llena los datos';
-      return;
-    }
-    $('floating-value').textContent = '$' + Math.round(metrics.perKm).toLocaleString('es-CL') + '/km';
-    $('floating-note').textContent = `${metrics.totalMin} min total · ${metrics.totalKm.toFixed(1)} km`;
-  }
-
   function parseQuickText(sourceText){
     const text = (sourceText || '').toLowerCase();
     const amountMatch = text.match(/(?:\$|\$\s*|ars|pesos?)\s*([0-9]+(?:[.,][0-9]{1,2})?)/i);
@@ -844,7 +816,7 @@
 
     $('quick-result-value').textContent = hasResult
       ? '$' + Math.round(metrics.perKm).toLocaleString('es-CL') + '/km'
-      : '\u2014';
+      : '—';
     $('quick-result-label').textContent = hasResult
       ? `${Math.round(metrics.perHour).toLocaleString('es-CL')} $/hora · ${metrics.totalMin} min total`
       : 'Completá monto, minutos y km';
@@ -855,7 +827,6 @@
       ? `Monto ofrecido dividido por km total: ${Math.round(metrics.perKm).toLocaleString('es-CL')} $/km.`
       : 'Sin evaluación todavía';
     setQuickSemaforo(metrics.perKm, settings.minPerKm || 1);
-    syncFloatingResult(metrics);
   }
 
   ['quick-amount','quick-pickup-min','quick-trip-min','quick-pickup-km','quick-trip-km'].forEach(id => {
@@ -895,8 +866,8 @@
 
   $('quick-save').addEventListener('click', async () => {
     const amount = parseFloat($('quick-amount').value);
-    if(!quickPlatform){ showToast('Eleg\u00ed una plataforma'); return; }
-    if(!amount || amount <= 0){ showToast('Ingres\u00e1 un monto v\u00e1lido'); return; }
+    if(!quickPlatform){ showToast('Elegí una plataforma'); return; }
+    if(!amount || amount <= 0){ showToast('Ingresá un monto válido'); return; }
     const metrics = getQuickOfferMetrics();
     const km = metrics.totalKm || null;
     trips.push({ id: 't'+Date.now(), platform: quickPlatform, amount, km, ts: Date.now() });
