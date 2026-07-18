@@ -1,0 +1,13 @@
+[
+  {
+    "platform": "didi",
+    "amount": 4500.0,
+    "km": 8.0,
+    "minutes": null,
+    "mode": "km",
+    "value": 562.5,
+    "threshold": 400,
+    "meets": true,
+    "createdAt": "2026-07-18T02:40:24.342797Z"
+  }
+]
