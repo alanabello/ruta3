@@ -24,6 +24,14 @@ allprojects {
     }
 }
 
+// Java toolchain configuration to ensure compatibility with JDK 21
+// (AGP 8.x requires JDK 17+, but does NOT support JDK 26 / class file major version 70)
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
