@@ -4,4 +4,5 @@
     <string name="title_activity_main">Ruta3</string>
     <string name="package_name">com.ruta3.app</string>
     <string name="custom_url_scheme">com.ruta3.app</string>
+    <string name="accessibility_service_description">Lee ofertas visibles de apps de viajes para calcular si convienen segun tus precios.</string>
 </resources>

@@ -1,7 +1,7 @@
 {
   "name": "Ruta3 — Panel del conductor",
   "short_name": "Ruta3",
-  "description": "Registro de viajes, ganancias y comparador de ofertas para conductores de Uber, Didi e InDrive.",
+  "description": "Validador rápido de ofertas de Uber, Didi e InDrive para conductores.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

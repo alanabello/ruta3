@@ -62,6 +62,12 @@
     font-size:11px; color:var(--text-dim); background:var(--bg-card);
     border:1px solid var(--line); padding:5px 10px; border-radius:20px;
   }
+  .top-actions{ display:flex; align-items:center; gap:8px; }
+  .apk-link{
+    font-size:11px; color:#1a1400; background:var(--amber);
+    border:1px solid var(--amber); padding:5px 10px; border-radius:20px;
+    text-decoration:none; font-weight:700; white-space:nowrap;
+  }
 
   /* net total hero */
   .hero{
@@ -259,7 +265,10 @@
         <div class="brand-sub">Uber · Didi · InDrive</div>
       </div>
     </div>
-    <div class="today-pill" id="date-pill">—</div>
+    <div class="top-actions">
+      <a class="apk-link" href="downloads/ruta3.apk" download>Android APK</a>
+      <div class="today-pill" id="date-pill">—</div>
+    </div>
   </div>
 
   <!-- RESUMEN -->
@@ -344,6 +353,20 @@
     </div>
   </div>
 
+  <!-- AJUSTES -->
+  <div class="tab-content" id="tab-ajustes">
+    <h2 class="page-title">Tus precios mínimos</h2>
+    <div class="threshold-row">
+      <label>Mínimo por km ($/km)</label>
+      <input type="number" inputmode="numeric" id="setting-min-km" value="400">
+    </div>
+    <div class="threshold-row">
+      <label>Mínimo por hora ($/h)</label>
+      <input type="number" inputmode="numeric" id="setting-min-hour" value="6000">
+    </div>
+    <button class="btn-primary" id="save-settings" style="margin-top:12px;">Guardar precios</button>
+  </div>
+
 </div>
 
 <button class="fab" id="fab-quick">
@@ -364,11 +387,6 @@
       <button class="modal-close" id="quick-close" aria-label="Cerrar">×</button>
     </div>
 
-    <div class="mode-toggle">
-      <div class="mode-btn active" data-mode="km">Por km</div>
-      <div class="mode-btn" data-mode="hora">Por tiempo</div>
-    </div>
-
     <div class="quick-platform-select" id="quick-platform-select">
       <div class="platform-opt" data-qplatform="uber" style="--sel-color:#e8e8e8">Uber</div>
       <div class="platform-opt" data-qplatform="didi" style="--sel-color:#ff7a33">Didi</div>
@@ -379,18 +397,30 @@
       <label>Monto que ofrece la app ($)</label>
       <input type="number" inputmode="decimal" class="mono-input" id="quick-amount" placeholder="4500">
     </div>
-    <div class="field" id="quick-km-field">
-      <label>Kilómetros del viaje</label>
-      <input type="number" inputmode="decimal" class="mono-input" id="quick-km" placeholder="8.5">
+    <div class="row-2">
+      <div class="field">
+        <label>Minutos recogida</label>
+        <input type="number" inputmode="decimal" class="mono-input" id="quick-pickup-min" placeholder="5">
+      </div>
+      <div class="field">
+        <label>Minutos viaje</label>
+        <input type="number" inputmode="decimal" class="mono-input" id="quick-trip-min" placeholder="18">
+      </div>
     </div>
-    <div class="field" id="quick-min-field" style="display:none;">
-      <label>Minutos estimados</label>
-      <input type="number" inputmode="decimal" class="mono-input" id="quick-min" placeholder="18">
+    <div class="row-2">
+      <div class="field">
+        <label>Km recogida</label>
+        <input type="number" inputmode="decimal" class="mono-input" id="quick-pickup-km" placeholder="1.2">
+      </div>
+      <div class="field">
+        <label>Km viaje</label>
+        <input type="number" inputmode="decimal" class="mono-input" id="quick-trip-km" placeholder="8.5">
+      </div>
     </div>
 
     <div class="field">
       <label>Texto del aviso (copiado desde Uber / Didi / InDrive)</label>
-      <textarea class="mono-input" id="quick-text" rows="3" placeholder="Ej: Didi · $4.500 · 8 km"></textarea>
+      <textarea class="mono-input" id="quick-text" rows="3" placeholder="Ej: Didi · $4.500 · 5 min recogida · 18 min viaje · 1.2 km recogida · 8.5 km viaje"></textarea>
     </div>
     <div class="row-2">
       <button class="btn-secondary" id="quick-paste">Pegar texto</button>
@@ -402,7 +432,7 @@
       <div class="quick-result-label" id="quick-result-label">Completá los datos</div>
     </div>
 
-    <div class="quick-summary" id="quick-summary">Oferta de una plataforma: completá monto y datos para revisar si entra en tus requisitos.</div>
+    <div class="quick-summary" id="quick-summary">Oferta de una plataforma: completá monto, minutos y kilómetros para revisar si entra en tus requisitos.</div>
     <div class="quick-requirement" id="quick-requirement">Sin evaluación todavía</div>
 
     <div class="semaforo" id="quick-semaforo">
@@ -430,6 +460,10 @@
     <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h18M3 12h18M3 17h12"/></svg>
     Gastos
   </button>
+  <button class="tab-btn" data-tab="ajustes">
+    <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M2 12h3M19 12h3M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/></svg>
+    Ajustes
+  </button>
 </div>
 
 <script>
@@ -447,6 +481,7 @@
 
   const $ = (id) => document.getElementById(id);
   const fmt = (n) => '$' + Math.round(n).toLocaleString('es-CL');
+  const ruta3NativeSettings = () => window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Ruta3Settings;
 
   async function loadRules(){
     try{
@@ -491,6 +526,14 @@
     try{ settings = JSON.parse(localStorage.getItem('ruta3_settings') || '{"minPerKm":400,"minPerHour":6000}'); }
     catch(e){ settings = { minPerKm: 400, minPerHour: 6000 }; }
     if(settings.minPerHour === undefined) settings.minPerHour = 6000;
+    const nativeSettings = ruta3NativeSettings();
+    if(nativeSettings && nativeSettings.getSettings){
+      try{
+        const native = await nativeSettings.getSettings();
+        settings.minPerKm = Number(native.minPerKm || settings.minPerKm);
+        settings.minPerHour = Number(native.minPerHour || settings.minPerHour);
+      } catch(e){}
+    }
     const rules = await loadRules();
     if(rules){
       settings.minPerKm = Number(rules.minPerKm || settings.minPerKm);
@@ -510,6 +553,15 @@
   async function saveSettings(){
     try{ localStorage.setItem('ruta3_settings', JSON.stringify(settings)); }
     catch(e){}
+    const nativeSettings = ruta3NativeSettings();
+    if(nativeSettings && nativeSettings.saveSettings){
+      try{
+        await nativeSettings.saveSettings({
+          minPerKm: Number(settings.minPerKm),
+          minPerHour: Number(settings.minPerHour)
+        });
+      } catch(e){}
+    }
   }
 
   function withinPeriod(ts, period){
@@ -526,6 +578,8 @@
 
   function render(){
     $('date-pill').textContent = new Date().toLocaleDateString('es-CL', { weekday:'short', day:'numeric', month:'short' });
+    $('setting-min-km').value = settings.minPerKm;
+    $('setting-min-hour').value = settings.minPerHour;
 
     const pTrips = trips.filter(t => withinPeriod(t.ts, activePeriod));
     const pExpenses = expenses.filter(e => withinPeriod(e.ts, activePeriod));
@@ -667,8 +721,34 @@
 
 
   /* ---------- ventanita emergente de c\u00e1lculo r\u00e1pido ---------- */
-  let quickMode = 'km';
   let quickPlatform = null;
+
+  function numFromInput(id){
+    const value = parseFloat($(id).value);
+    return Number.isFinite(value) && value > 0 ? value : 0;
+  }
+
+  function getQuickOfferMetrics(){
+    const amount = numFromInput('quick-amount');
+    const pickupMin = numFromInput('quick-pickup-min');
+    const tripMin = numFromInput('quick-trip-min');
+    const pickupKm = numFromInput('quick-pickup-km');
+    const tripKm = numFromInput('quick-trip-km');
+    const totalMin = pickupMin + tripMin;
+    const totalKm = pickupKm + tripKm;
+
+    return {
+      amount,
+      pickupMin,
+      tripMin,
+      pickupKm,
+      tripKm,
+      totalMin,
+      totalKm,
+      perKm: amount > 0 && totalKm > 0 ? amount / totalKm : null,
+      perHour: amount > 0 && totalMin > 0 ? (amount / totalMin) * 60 : null,
+    };
+  }
 
   function prefillQuickModalFromLatestTrip(){
     const latest = [...trips].sort((a,b) => b.ts - a.ts)[0];
@@ -680,13 +760,7 @@
     });
 
     $('quick-amount').value = latest.amount || '';
-    if(quickMode === 'km'){
-      $('quick-km').value = latest.km || '';
-      $('quick-min').value = '';
-    } else {
-      $('quick-min').value = latest.km ? Math.round((latest.km / 1.2)) : '';
-      $('quick-km').value = '';
-    }
+    $('quick-trip-km').value = latest.km || '';
   }
 
   function openQuickModal(){
@@ -701,17 +775,6 @@
   $('quick-close').addEventListener('click', closeQuickModal);
   $('quick-modal').addEventListener('click', (ev) => {
     if(ev.target.id === 'quick-modal') closeQuickModal();
-  });
-
-  document.querySelectorAll('.mode-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      quickMode = btn.dataset.mode;
-      $('quick-km-field').style.display = quickMode === 'km' ? 'block' : 'none';
-      $('quick-min-field').style.display = quickMode === 'hora' ? 'block' : 'none';
-      updateQuickResult();
-    });
   });
 
   document.querySelectorAll('[data-qplatform]').forEach(opt => {
@@ -731,21 +794,25 @@
     else $('qsf-green').classList.add('on');
   }
 
-  function syncFloatingResult(value, label){
-    if(value === null){
+  function syncFloatingResult(metrics){
+    if(!metrics.perKm){
       $('floating-value').textContent = '—';
       $('floating-note').textContent = 'Pega el aviso o llena los datos';
       return;
     }
-    $('floating-value').textContent = '$' + Math.round(value).toLocaleString('es-CL');
-    $('floating-note').textContent = label || 'Resultado rápido';
+    $('floating-value').textContent = '$' + Math.round(metrics.perKm).toLocaleString('es-CL') + '/km';
+    $('floating-note').textContent = `${metrics.totalMin} min total · ${metrics.totalKm.toFixed(1)} km`;
   }
 
   function parseQuickText(sourceText){
     const text = (sourceText || '').toLowerCase();
     const amountMatch = text.match(/(?:\$|\$\s*|ars|pesos?)\s*([0-9]+(?:[.,][0-9]{1,2})?)/i);
-    const kmMatch = text.match(/([0-9]+(?:[.,][0-9]{1,2})?)\s*(km|kilometros|kilómetros)/i);
-    const minMatch = text.match(/([0-9]+(?:[.,][0-9]{1,2})?)\s*(min|mins|minutos)/i);
+    const pickupMinMatch = text.match(/([0-9]+(?:[.,][0-9]{1,2})?)\s*(min|mins|minutos)\s*(de\s*)?(recogida|retiro|pickup)/i);
+    const tripMinMatch = text.match(/([0-9]+(?:[.,][0-9]{1,2})?)\s*(min|mins|minutos)\s*(de\s*)?(viaje|trayecto|destino)/i);
+    const pickupKmMatch = text.match(/([0-9]+(?:[.,][0-9]{1,2})?)\s*(km|kilometros|kilómetros)\s*(de\s*)?(recogida|retiro|pickup)/i);
+    const tripKmMatch = text.match(/([0-9]+(?:[.,][0-9]{1,2})?)\s*(km|kilometros|kilómetros)\s*(de\s*)?(viaje|trayecto|destino)/i);
+    const minMatches = [...text.matchAll(/([0-9]+(?:[.,][0-9]{1,2})?)\s*(min|mins|minutos)/gi)];
+    const kmMatches = [...text.matchAll(/([0-9]+(?:[.,][0-9]{1,2})?)\s*(km|kilometros|kilómetros)/gi)];
     const platformMap = {
       uber: /uber/,
       didi: /didi/,
@@ -761,38 +828,52 @@
     }
 
     if(amountMatch) $('quick-amount').value = amountMatch[1].replace(',', '.');
-    if(kmMatch) $('quick-km').value = kmMatch[1].replace(',', '.');
-    if(minMatch) $('quick-min').value = minMatch[1].replace(',', '.');
+    if(pickupMinMatch) $('quick-pickup-min').value = pickupMinMatch[1].replace(',', '.');
+    else if(minMatches[0]) $('quick-pickup-min').value = minMatches[0][1].replace(',', '.');
+    if(tripMinMatch) $('quick-trip-min').value = tripMinMatch[1].replace(',', '.');
+    else if(minMatches[1]) $('quick-trip-min').value = minMatches[1][1].replace(',', '.');
+    if(pickupKmMatch) $('quick-pickup-km').value = pickupKmMatch[1].replace(',', '.');
+    else if(kmMatches[0]) $('quick-pickup-km').value = kmMatches[0][1].replace(',', '.');
+    if(tripKmMatch) $('quick-trip-km').value = tripKmMatch[1].replace(',', '.');
+    else if(kmMatches[1]) $('quick-trip-km').value = kmMatches[1][1].replace(',', '.');
   }
 
   function updateQuickResult(){
-    const amount = parseFloat($('quick-amount').value);
-    let value = null, label = 'Completá los datos', display = '\u2014';
+    const metrics = getQuickOfferMetrics();
+    const hasResult = metrics.perKm !== null && metrics.perHour !== null;
 
-    if(quickMode === 'km'){
-      const km = parseFloat($('quick-km').value);
-      if(amount > 0 && km > 0){
-        value = amount / km;
-        display = Math.round(value).toLocaleString('es-CL');
-        label = '$ por kil\u00f3metro';
-      }
-      setQuickSemaforo(value, settings.minPerKm || 1);
-    } else {
-      const min = parseFloat($('quick-min').value);
-      if(amount > 0 && min > 0){
-        value = (amount / min) * 60;
-        display = Math.round(value).toLocaleString('es-CL');
-        label = '$ por hora';
-      }
-      setQuickSemaforo(value, settings.minPerHour || 1);
-    }
-    $('quick-result-value').textContent = value === null ? '\u2014' : '$' + display;
-    $('quick-result-label').textContent = label;
-    syncFloatingResult(value, label);
+    $('quick-result-value').textContent = hasResult
+      ? '$' + Math.round(metrics.perKm).toLocaleString('es-CL') + '/km'
+      : '\u2014';
+    $('quick-result-label').textContent = hasResult
+      ? `${Math.round(metrics.perHour).toLocaleString('es-CL')} $/hora · ${metrics.totalMin} min total`
+      : 'Completá monto, minutos y km';
+    $('quick-summary').textContent = hasResult
+      ? `Tiempo total: ${metrics.totalMin} min. Km total: ${metrics.totalKm.toFixed(1)} km. Recogida: ${metrics.pickupMin} min / ${metrics.pickupKm.toFixed(1)} km. Viaje: ${metrics.tripMin} min / ${metrics.tripKm.toFixed(1)} km.`
+      : 'Oferta de una plataforma: completá monto, minutos y kilómetros para revisar si entra en tus requisitos.';
+    $('quick-requirement').textContent = hasResult
+      ? `Monto ofrecido dividido por km total: ${Math.round(metrics.perKm).toLocaleString('es-CL')} $/km.`
+      : 'Sin evaluación todavía';
+    setQuickSemaforo(metrics.perKm, settings.minPerKm || 1);
+    syncFloatingResult(metrics);
   }
 
-  ['quick-amount','quick-km','quick-min'].forEach(id => {
+  ['quick-amount','quick-pickup-min','quick-trip-min','quick-pickup-km','quick-trip-km'].forEach(id => {
     $(id).addEventListener('input', updateQuickResult);
+  });
+
+  $('save-settings').addEventListener('click', async () => {
+    const minPerKm = parseInt($('setting-min-km').value, 10);
+    const minPerHour = parseInt($('setting-min-hour').value, 10);
+    if(!minPerKm || minPerKm <= 0 || !minPerHour || minPerHour <= 0){
+      showToast('Ingresá precios válidos');
+      return;
+    }
+    settings.minPerKm = minPerKm;
+    settings.minPerHour = minPerHour;
+    await saveSettings();
+    updateQuickResult();
+    showToast('Precios guardados');
   });
 
   $('quick-parse').addEventListener('click', () => {
@@ -816,17 +897,12 @@
     const amount = parseFloat($('quick-amount').value);
     if(!quickPlatform){ showToast('Eleg\u00ed una plataforma'); return; }
     if(!amount || amount <= 0){ showToast('Ingres\u00e1 un monto v\u00e1lido'); return; }
-    let km = null;
-    if(quickMode === 'km'){
-      km = parseFloat($('quick-km').value) || null;
-    } else {
-      const min = parseFloat($('quick-min').value);
-      km = null;
-    }
+    const metrics = getQuickOfferMetrics();
+    const km = metrics.totalKm || null;
     trips.push({ id: 't'+Date.now(), platform: quickPlatform, amount, km, ts: Date.now() });
     await saveTrips();
     showToast('Viaje guardado');
-    $('quick-amount').value=''; $('quick-km').value=''; $('quick-min').value='';
+    ['quick-amount','quick-pickup-min','quick-trip-min','quick-pickup-km','quick-trip-km'].forEach(id => { $(id).value=''; });
     document.querySelectorAll('[data-qplatform]').forEach(o => o.classList.remove('selected'));
     quickPlatform = null;
     updateQuickResult();

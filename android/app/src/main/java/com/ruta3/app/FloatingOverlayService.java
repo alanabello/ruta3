@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.TypedValue;
@@ -13,8 +14,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class FloatingOverlayService extends Service {
+    public static final String ACTION_SHOW_OFFER = "com.ruta3.app.SHOW_OFFER";
+    public static final String EXTRA_TITLE = "title";
+    public static final String EXTRA_VALUE = "value";
+    public static final String EXTRA_NOTE = "note";
+    public static final String EXTRA_MEETS = "meets";
+
     private WindowManager windowManager;
     private LinearLayout overlayLayout;
+    private TextView titleView;
+    private TextView valueView;
+    private TextView noteView;
+    private GradientDrawable bubble;
 
     @Override
     public void onCreate() {
@@ -23,30 +34,36 @@ public class FloatingOverlayService extends Service {
 
         overlayLayout = new LinearLayout(this);
         overlayLayout.setOrientation(LinearLayout.VERTICAL);
-        overlayLayout.setBackgroundColor(Color.parseColor("#1c1f26"));
         overlayLayout.setPadding(dp(12), dp(10), dp(12), dp(10));
         overlayLayout.setMinimumWidth(dp(200));
-        overlayLayout.setMinimumHeight(dp(84));
+        overlayLayout.setMinimumHeight(dp(82));
 
-        TextView title = new TextView(this);
-        title.setText("Resultado rápido");
-        title.setTextColor(Color.parseColor("#9a9da6"));
-        title.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11);
+        bubble = new GradientDrawable();
+        bubble.setShape(GradientDrawable.RECTANGLE);
+        bubble.setColor(Color.parseColor("#1c1f26"));
+        bubble.setCornerRadius(dp(18));
+        bubble.setStroke(dp(1), Color.parseColor("#2c303a"));
+        overlayLayout.setBackground(bubble);
 
-        TextView value = new TextView(this);
-        value.setText("$0");
-        value.setTextColor(Color.parseColor("#f2f1ea"));
-        value.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
-        value.setTypeface(value.getTypeface(), android.graphics.Typeface.BOLD);
+        titleView = new TextView(this);
+        titleView.setText("Ruta3 activo");
+        titleView.setTextColor(Color.parseColor("#9a9da6"));
+        titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11);
 
-        TextView note = new TextView(this);
-        note.setText("Cumple tus requisitos");
-        note.setTextColor(Color.parseColor("#7fd858"));
-        note.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11);
+        valueView = new TextView(this);
+        valueView.setText("Esperando oferta");
+        valueView.setTextColor(Color.parseColor("#f2f1ea"));
+        valueView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+        valueView.setTypeface(valueView.getTypeface(), android.graphics.Typeface.BOLD);
 
-        overlayLayout.addView(title);
-        overlayLayout.addView(value);
-        overlayLayout.addView(note);
+        noteView = new TextView(this);
+        noteView.setText("Abre Uber, Didi o InDrive");
+        noteView.setTextColor(Color.parseColor("#9a9da6"));
+        noteView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11);
+
+        overlayLayout.addView(titleView);
+        overlayLayout.addView(valueView);
+        overlayLayout.addView(noteView);
 
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -61,9 +78,32 @@ public class FloatingOverlayService extends Service {
 
         params.gravity = Gravity.TOP | Gravity.END;
         params.x = dp(16);
-        params.y = dp(120);
+        params.y = dp(110);
 
         windowManager.addView(overlayLayout, params);
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent != null && ACTION_SHOW_OFFER.equals(intent.getAction())) {
+            updateOffer(
+                    intent.getStringExtra(EXTRA_TITLE),
+                    intent.getStringExtra(EXTRA_VALUE),
+                    intent.getStringExtra(EXTRA_NOTE),
+                    intent.getBooleanExtra(EXTRA_MEETS, false)
+            );
+        }
+        return START_STICKY;
+    }
+
+    private void updateOffer(String title, String value, String note, boolean meets) {
+        if (titleView == null || valueView == null || noteView == null) return;
+
+        titleView.setText(title == null ? "Oferta detectada" : title);
+        valueView.setText(value == null ? "--" : value);
+        noteView.setText(note == null ? "" : note);
+        noteView.setTextColor(Color.parseColor(meets ? "#7fd858" : "#ff6459"));
+        bubble.setStroke(dp(1), Color.parseColor(meets ? "#4f8f36" : "#8f3630"));
     }
 
     @Override
