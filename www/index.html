@@ -201,7 +201,6 @@
       </div>
     </div>
     <div class="top-actions">
-      <a class="apk-link" id="install-apk" href="downloads/ruta3.apk" download>Android APK</a>
       <div class="today-pill" id="date-pill">—</div>
     </div>
   </div>
@@ -341,7 +340,6 @@
   const $ = (id) => document.getElementById(id);
   const fmt = (n) => '$' + Math.round(n).toLocaleString('es-CL');
   const ruta3NativeSettings = () => window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Ruta3Settings;
-  const ruta3ApkInstaller = () => window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Ruta3ApkInstaller;
 
   async function loadRules(){
     try{
@@ -590,25 +588,6 @@
     settings.minPerHour = minPerHour;
     await saveSettings();
     showToast('Precios guardados');
-  });
-
-  $('install-apk').addEventListener('click', async (event) => {
-    const apkInstaller = ruta3ApkInstaller();
-    if (!apkInstaller) {
-      return;
-    }
-
-    event.preventDefault();
-    try {
-      const result = await apkInstaller.installBundledApk();
-      if (result && result.needsPermission) {
-        showToast('Habilita instalar apps desconocidas y toca Android APK otra vez');
-      } else {
-        showToast('Instalador de Android iniciado');
-      }
-    } catch (err) {
-      showToast('No se pudo iniciar la instalacion del APK');
-    }
   });
 
   loadAll();
