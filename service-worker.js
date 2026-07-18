@@ -18,6 +18,11 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  // Skip APK downloads - don't intercept them with the service worker
+  if (event.request.url.endsWith('.apk')) {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const fetchPromise = fetch(event.request)
