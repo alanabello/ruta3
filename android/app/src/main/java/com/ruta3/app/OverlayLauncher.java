@@ -30,6 +30,14 @@ public class OverlayLauncher {
         }
 
         Intent service = new Intent(context, FloatingOverlayService.class);
-        context.startService(service);
+        startOverlayService(context, service);
+    }
+
+    public static void startOverlayService(Context context, Intent service) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(service);
+        } else {
+            context.startService(service);
+        }
     }
 }
