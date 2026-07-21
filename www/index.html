@@ -201,7 +201,6 @@
       </div>
     </div>
     <div class="top-actions">
-      <a class="apk-link" href="downloads/ruta3.apk" download>Descargar APK</a>
       <div class="today-pill" id="date-pill">—</div>
     </div>
   </div>
@@ -325,6 +324,7 @@
   </button>
 </div>
 
+<script src="offerService.js"></script>
 <script>
 (function(){
   const PLATFORM_META = {
@@ -344,9 +344,8 @@
 
   async function loadRules(){
     try{
-      const response = await fetch('http://127.0.0.1:8001/api/rules');
-      if(!response.ok) return null;
-      return await response.json();
+      if(!window.Ruta3OfferService) return null;
+      return await window.Ruta3OfferService.getRules();
     } catch (e) {
       return null;
     }
@@ -354,16 +353,8 @@
 
   async function validateOffer(payload){
     try{
-      const response = await fetch('http://127.0.0.1:8001/api/validate-offer', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      if(!response.ok){
-        const data = await response.json().catch(() => ({}));
-        throw new Error(data.error || 'No se pudo validar la oferta');
-      }
-      return await response.json();
+      if(!window.Ruta3OfferService) throw new Error('No se pudo validar la oferta');
+      return await window.Ruta3OfferService.validateOffer(payload);
     } catch (error) {
       showToast(error.message || 'No se pudo validar la oferta');
       return null;

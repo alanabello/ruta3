@@ -1,30 +1,29 @@
-# Ruta3 Backend local
+# Ruta3 PWA
 
-Este proyecto incluye un backend minimalista para validar ofertas de Uber, Didi e InDrive.
+Ruta3 valida ofertas de Uber, Didi e InDrive desde JavaScript, sin servidor Python local.
 
 ## Ejecutar
 
+Abre `index.html` en navegador o usa Capacitor para Android con el contenido de `www`.
+
 ```bash
-python backend.py
+npm run sync:android
 ```
 
-## Endpoint
+## Servicio de ofertas
 
-### GET /api/rules
-Retorna las reglas de validación.
+La logica que antes vivia en el backend local esta en `offerService.js`.
 
-### POST /api/validate-offer
-Envía la oferta para evaluarla.
+Funciones disponibles:
 
-Ejemplo:
-
-```json
-{
-  "platform": "didi",
-  "amount": 4500,
-  "mode": "km",
-  "km": 8
-}
+```js
+await window.Ruta3OfferService.getRules();
+await window.Ruta3OfferService.validateOffer({
+  platform: 'didi',
+  amount: 4500,
+  mode: 'km',
+  km: 8
+});
 ```
 
 Respuesta ejemplo:
@@ -38,7 +37,7 @@ Respuesta ejemplo:
   "threshold": 400,
   "meets": true,
   "result": "cumple",
-  "summary": "Oferta de DIDI: 4500 pesos en 8 km → 563 $/km",
+  "summary": "Oferta de DIDI: 4500 pesos en 8 km -> 563 $/km",
   "message": "Cumple tus requisitos configurados"
 }
 ```

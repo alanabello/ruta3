@@ -1,5 +1,5 @@
-const CACHE_NAME = 'ruta3-v6';
-const ASSETS = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
+const CACHE_NAME = 'ruta3-v7';
+const ASSETS = ['./', './index.html', './offerService.js', './manifest.json', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(

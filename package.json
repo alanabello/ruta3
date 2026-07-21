@@ -1,7 +1,7 @@
 {
   "name": "ruta3-pwa",
   "version": "1.0.0",
-  "description": "Este proyecto incluye un backend minimalista para validar ofertas de Uber, Didi e InDrive.",
+  "description": "PWA de Ruta3 para validar ofertas de Uber, Didi e InDrive sin backend local.",
   "main": "service-worker.js",
   "scripts": {
     "test": "node scripts/test-pwa.js",
